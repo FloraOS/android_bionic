@@ -51,6 +51,7 @@ struct libc_globals {
   _Atomic(bool) memtag_stack;
   _Atomic(bool) decay_time_enabled;
   _Atomic(bool) memtag;
+  long dtor_cookie;
 
   // In order to allow a complete switch between dispatch tables without
   // the need for copying each function by function in the structure,
