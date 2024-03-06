@@ -163,6 +163,7 @@ libc32_scudo_product_variables = {
 cc_defaults {
     name: "libc_native_allocator_defaults",
     whole_static_libs: ["libc_jemalloc_wrapper"],
+    header_libs: ["gwp_asan_headers"],
     multilib: {
         lib32: {
             cflags: ["-DUSE_SCUDO"],
@@ -183,17 +184,7 @@ cc_defaults {
                 "libscudo",
             ],
         },
-    },
-
-    header_libs: ["gwp_asan_headers"],
-    multilib: {
-        lib64: {
-            product_variables: libc_scudo_product_variables,
-        },
-        lib32: {
-            product_variables: libc32_scudo_product_variables,
-        }
-    },
+    }, 
 }
 
 // Functions not implemented by jemalloc directly, or that need to
