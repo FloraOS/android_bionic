@@ -215,10 +215,7 @@ int sched_getcpu(void);
  * statically-sized CPU set. See `CPU_ALLOC` for dynamically-sized CPU sets.
  */
 typedef struct {
-  union {
-    __CPU_BITTYPE  __bits_minimum[ CPU_SETSIZE / __CPU_BITS ];
-    __CPU_BITTYPE  __bits[0];
-  };
+  __CPU_BITTYPE  __bits[ CPU_SETSIZE / __CPU_BITS ];
 } cpu_set_t;
 
 /**
