@@ -109,6 +109,21 @@ static void init_prog_id(libc_globals* globals) {
   if (IS("/apex/com.google.pixel.camera.hal/bin/hw/android.hardware.camera.provider@2.7-service-google")) {
     prog_id = PROG_PIXEL_CAMERA_PROVIDER_SERVICE;
   }
+
+  // FloraOS: the FP4 display composer HAL has a write-after-free that
+  // hardened_malloc's WRITE_AFTER_FREE_CHECK catches, and fatal_error() then
+  // takes surfaceflinger down with it. The bug is in the closed vendor blob.
+  //
+  // This is hardcoded rather than left to the sysprop override below because
+  // that override lives in the persist.device_config.* namespace, which
+  // system_server's SettingsToPropertiesMapper resyncs from the settings DB and
+  // blanks when no flag backs it. That only leaves a window: the HAL reads the
+  // value at process start, so an early-boot start sees it, but any later
+  // restart of the HAL does not - and one such restart is enough to abort,
+  // kill surfaceflinger and stall the boot with a black screen.
+  if (IS("/vendor/bin/hw/vendor.qti.hardware.display.composer-service")) {
+    flags = GLOBAL_FLAG_DISABLE_HARDENED_MALLOC;
+  }
 #undef IS
 
   bool is_debuggable = is_debuggable_build();
